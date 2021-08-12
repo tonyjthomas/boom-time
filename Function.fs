@@ -4,8 +4,8 @@ open FSharp.Data
 open Microsoft.Azure.WebJobs
 open Microsoft.Azure.WebJobs.Extensions.Http
 open Microsoft.AspNetCore.Http
-open Microsoft.Extensions.Logging
 open System
+open Twilio
 open Twilio.Rest.Api.V2010.Account
 open Twilio.Types
 
@@ -18,11 +18,22 @@ module Function =
     [<Literal>]    
     let gameSample = "http://statsapi.mlb.com/api/v1.1/game/647409/feed/live"
     type Game = JsonProvider<gameSample>
-    
     let schedule = Schedule.GetSample()
     
+    let sid = Environment.GetEnvironmentVariable("TWILIO_SID")
+    let token = Environment.GetEnvironmentVariable("TWILIO_TOKEN")
+    let fromPhone = Environment.GetEnvironmentVariable("TWILIO_FROM") |> PhoneNumber
+    let toPhone = Environment.GetEnvironmentVariable("TWILIO_TO") |> PhoneNumber
+    let mostRecentMessage =
+        TwilioClient.Init(sid, token)
+        MessageResource.Read(
+            ``to``  = toPhone,
+            from    = fromPhone,
+            limit   = 1L)
+        |> Seq.head
+    
     [<Literal>]
-    let bulls = "Durham Bulls Athletic Park"
+    let bullsStadium = "Durham Bulls Athletic Park"    
     
     let tryFindOngoingGameAtVenue venueName =
         let gameDetails = 
@@ -31,38 +42,31 @@ module Function =
             |> Option.map (fun game -> Game.Load($"{apiBase}{game.Link}"))
         gameDetails
         
-//    [<FunctionName("BoomTime")>]
-//    let boomTime([<TimerTrigger("0 */10 * * * 5,6")>] timer: TimerInfo, log: ILogger) =
-//        let venue = "Durham Bulls Athletic Park"
-//        
-//        tryFindOngoingGameAtVenue venue
-//        |> Option.filter (fun g -> g.LiveData.Linescore.CurrentInning >= 8)
-//        |> Option.map (postMessage venue)
-//        |> ignore
-//        
-//        OkResult()
-
-    let formattedMessage (game: Game.Root) =
-        $"\n🎆BOOMTIME🎇\n{game.GameData.Teams.Home.Name} vs {game.GameData.Teams.Away.Name}\n{game.LiveData.Linescore.CurrentInningOrdinal} inning 🐶"
-    
     let createSms (game: Game.Root) =
-        let fromPhone = Environment.GetEnvironmentVariable("TWILIO_FROM")
-        let toPhone = Environment.GetEnvironmentVariable("TWILIO_TO")
+        let formattedMessage =
+            $"\n🎆BOOMTIME🎇\n{game.GameData.Teams.Home.Name} vs {game.GameData.Teams.Away.Name}\n{game.LiveData.Linescore.CurrentInningOrdinal} inning 🐶"
         CreateMessageOptions(
-                    ``to``= PhoneNumber(toPhone),
-                    From = PhoneNumber(fromPhone),
-                    Body = formattedMessage game)
-
-    [<FunctionName("BindingTest")>]    
-    let testBinding
-        ([<HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)>]req: HttpRequest)
-        ([<TwilioSms(AccountSidSetting = "TWILIO_SID", AuthTokenSetting = "TWILIO_TOKEN")>]msg: outref<CreateMessageOptions>)
-        (log: ILogger) =
-    
-        let venue = req.Query.["venue"].ToString()
+            ``to``  = toPhone,
+            From    = fromPhone,
+            Body    = formattedMessage)
         
-        msg <-
+    let coreLogic venue f =
+        if mostRecentMessage.DateSent.Value > DateTime.Now.Subtract(TimeSpan.FromHours(1.0)) then
+            ()
+        else                
             tryFindOngoingGameAtVenue venue
+            |> Option.filter f
             |> Option.map createSms
-            |> Option.toObj
+            |> Option.map MessageResource.Create
+            |> ignore
+        
+    [<FunctionName("BoomTime")>]
+    let boomTime([<TimerTrigger("0 */10 * * * 5,6")>] timer: TimerInfo) =
+        coreLogic bullsStadium (fun g -> g.LiveData.Linescore.CurrentInning >= 8)
+
+    [<FunctionName("Manual")>]    
+    let testBinding ([<HttpTrigger(AuthorizationLevel.Function, "get")>]req: HttpRequest) =
+        let venue = req.Query.["venue"].ToString()
+        coreLogic venue (fun _ -> true)
+            
         

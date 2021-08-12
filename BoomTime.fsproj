@@ -6,8 +6,8 @@
   <ItemGroup>
     <PackageReference Include="FSharp.Data" Version="4.2.1" />
     <PackageReference Include="Microsoft.Azure.WebJobs" Version="3.0.27" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Twilio" Version="3.0.2" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
+    <PackageReference Include="Twilio" Version="5.65.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="host.json">
