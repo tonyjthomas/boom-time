@@ -5,16 +5,18 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FSharp.Data" Version="4.2.1" />
+    <PackageReference Include="Microsoft.Azure.WebJobs" Version="3.0.27" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Twilio" Version="3.0.2" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="host.json">
+    <Content Include="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="local.settings.json">
+    </Content>
+    <Content Include="local.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Function.fs" />
