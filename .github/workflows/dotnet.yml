@@ -18,6 +18,6 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./BoomTime
     - name: Build
       run: dotnet build ./BoomTime --no-restore
