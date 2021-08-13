@@ -39,12 +39,12 @@ module Function =
         let gameDetails = 
             schedule.Dates.[0].Games
             |> Seq.tryFind (fun game -> game.Status.AbstractGameState = "Live" && game.Venue.Name = venueName)
-            |> Option.map (fun game -> Game.Load($"{apiBase}{game.Link}"))
+            |> Option.map (fun game -> Game.Load(sprintf "%s%s" apiBase game.Link))
         gameDetails
         
     let createSms (game: Game.Root) =
         let formattedMessage =
-            $"\n🎆BOOMTIME🎇\n{game.GameData.Teams.Home.Name} vs {game.GameData.Teams.Away.Name}\n{game.LiveData.Linescore.CurrentInningOrdinal} inning 🐶"
+            sprintf "\n🎆BOOMTIME🎇\n%s vs %s\n%s inning 🐶" game.GameData.Teams.Home.Name game.GameData.Teams.Away.Name game.LiveData.Linescore.CurrentInningOrdinal
         CreateMessageOptions(
             ``to``  = toPhone,
             From    = fromPhone,
