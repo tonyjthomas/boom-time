@@ -13,14 +13,10 @@ let twilioFrom = "twilioFrom"
 [<Literal>]
 let rgName = "boomtime"
 
-let vault = keyVault {
-    name $"kv-{rgName}"
-}
-
 let func = functions {
     name                $"func-{rgName}"
     service_plan_name   $"plan-{rgName}"
-    link_to_keyvault    vault.Name
+    use_keyvault
     secret_setting      twilioSid
     secret_setting      twilioToken
     secret_setting      twilioFrom
@@ -30,7 +26,7 @@ let func = functions {
 
 let deployment = arm {
     location Location.EastUS
-    add_resources [ vault; func ]
+    add_resource func
 }
 
 let parameters =
