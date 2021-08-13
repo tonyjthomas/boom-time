@@ -50,7 +50,7 @@ module Function =
             From    = fromPhone,
             Body    = formattedMessage)
         
-    let coreLogic venue f =
+    let filterOngoingAndSend venue f =
         if mostRecentMessage.DateSent.Value > DateTime.Now.Subtract(TimeSpan.FromHours(1.0)) then
             ()
         else                
@@ -62,11 +62,11 @@ module Function =
         
     [<FunctionName("BoomTime")>]
     let boomTime([<TimerTrigger("0 */10 * * * 5,6")>] timer: TimerInfo) =
-        coreLogic bullsStadium (fun g -> g.LiveData.Linescore.CurrentInning >= 8)
+        filterOngoingAndSend bullsStadium (fun g -> g.LiveData.Linescore.CurrentInning >= 8)
 
     [<FunctionName("Manual")>]    
     let testBinding ([<HttpTrigger(AuthorizationLevel.Function, "get")>]req: HttpRequest) =
         let venue = req.Query.["venue"].ToString()
-        coreLogic venue (fun _ -> true)
+        filterOngoingAndSend venue (fun _ -> true)
             
         

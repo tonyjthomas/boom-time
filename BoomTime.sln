@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BoomTime", "BoomTime\BoomTime.fsproj", "{F7EBA454-E030-4A46-BCC6-6B45186B0B1B}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BoomTime.Deploy", "BoomTime.Deploy\BoomTime.Deploy.fsproj", "{C3F3160A-28CA-4DF5-99EF-99DB9724B825}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7EBA454-E030-4A46-BCC6-6B45186B0B1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7EBA454-E030-4A46-BCC6-6B45186B0B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7EBA454-E030-4A46-BCC6-6B45186B0B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7EBA454-E030-4A46-BCC6-6B45186B0B1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3F3160A-28CA-4DF5-99EF-99DB9724B825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3F3160A-28CA-4DF5-99EF-99DB9724B825}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3F3160A-28CA-4DF5-99EF-99DB9724B825}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3F3160A-28CA-4DF5-99EF-99DB9724B825}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
