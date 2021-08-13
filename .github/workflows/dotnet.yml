@@ -33,6 +33,20 @@ jobs:
       run: dotnet restore ./BoomTime.Deploy
     - name: Build Deploy
       run: dotnet build ./BoomTime.Deploy --no-restore --configuration Release
-    - name: Create Template
+    - name: Copy package to Deploy
+      shell: pwsh
+      run: |
+        Copy-Item .\package.zip -Destination .\BoomTime.Deploy\bin\Release\netcoreapp5.0\package.zip
+    - name: Az login
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+        enable-AzPSSession: true
+    - name: Depoy to Azure
+      env: 
+        twilioSid: ${{ secrets.TWILIOSID }}
+        twilioToken: ${{ secrets.TWILIOTOKEN }}
+        twilioFrom: ${{ secrets.TWILIOFROM }}
+        twilioTo: ${{ secrets.TWILIOTO }}
       run: dotnet ./BoomTime.Deploy/bin/Release/netcoreapp5.0/BoomTime.Deploy.dll
         
