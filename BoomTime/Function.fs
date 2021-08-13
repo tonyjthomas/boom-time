@@ -70,5 +70,7 @@ module Function =
         let venue = req.Query.["venue"].ToString()
         match filterOngoingAndSend venue (fun _ -> true) with
         | None ->  sprintf "No ongoing games found at %s" 
-        | Some s -> sprintf "Found ongoing game at %s and sent notification"            
+        | Some s -> sprintf "Found ongoing game at %s and sent notification"
+        |> OkObjectResult
+            
         
