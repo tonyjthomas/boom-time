@@ -1,4 +1,4 @@
-name: .NET
+name: Build and Deploy
 
 on:
   push:
@@ -13,11 +13,26 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET
+    - name: Setup .NET 3.1
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
-    - name: Restore dependencies
+    - name: Restore dependencies for Function
       run: dotnet restore ./BoomTime
-    - name: Build
-      run: dotnet build ./BoomTime --no-restore
+    - name: Build Function
+      run: dotnet build ./BoomTime --no-restore /p:DeployOnBuild=true /p:DeployTarget=Package;CreatePackageOnPublish=true
+    - name: Package Function
+      shell: pwsh
+      run: |
+        Compress-Archive -Path .\BoomTime\bin\Debug\netcoreapp3.1\Publish\ -DestinationPath .\package.zip
+    - name: Setup .NET 5.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies for Deploy
+      run: dotnet restore ./BoomTime.Deploy
+    - name: Build Deploy
+      run: dotnet build ./BoomTime.Deploy --no-restore --configuration Release
+    - name: Create Template
+      run: dotnet ./BoomTime.Deploy/bin/Release/netcoreapp5.0/BoomTime.Deploy.dll
+        
