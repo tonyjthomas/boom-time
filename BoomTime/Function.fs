@@ -29,7 +29,7 @@ module Function =
         MessageResource.Read(
             ``to``  = toPhone,
             from    = fromPhone,
-            limit   = 1L)
+            limit   = Nullable 1L)
         |> Seq.head
     
     [<Literal>]
