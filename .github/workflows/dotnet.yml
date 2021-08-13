@@ -24,4 +24,4 @@ jobs:
     - name: Zip
       shell: pwsh
       run: |
-        Compress-Archive -Path ./BoomTime/bin/Publish
+        Compress-Archive -Path .\BoomTime\bin\Debug\netcoreapp3.1\Publish\ -DestinationPath .\package.zip
