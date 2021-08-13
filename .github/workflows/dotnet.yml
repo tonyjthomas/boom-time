@@ -1,4 +1,4 @@
-name: .NET
+name: Build and Deploy
 
 on:
   push:
@@ -20,4 +20,8 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./BoomTime
     - name: Build
-      run: dotnet build ./BoomTime --no-restore
+      run: dotnet build ./BoomTime --no-restore /p:DeployOnBuild=true /p:DeployTarget=Package;CreatePackageOnPublish=true
+    - name: Zip
+      shell: pwsh
+      run: |
+        Compress-Archive -Path ./BoomTime/bin/Publish
