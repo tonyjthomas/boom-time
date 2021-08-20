@@ -20,11 +20,11 @@ module Function =
     type Game = JsonProvider<gameSample>
     let schedule = Schedule.GetSample()
     
-    let sid = Environment.GetEnvironmentVariable("TWILIO_SID")
-    let token = Environment.GetEnvironmentVariable("TWILIO_TOKEN")
-    let fromPhone = Environment.GetEnvironmentVariable("TWILIO_FROM") |> PhoneNumber
-    let toPhone = Environment.GetEnvironmentVariable("TWILIO_TO") |> PhoneNumber
-    let getMostRecentMessage () =
+    let sid = Environment.GetEnvironmentVariable("twilioSid")
+    let token = Environment.GetEnvironmentVariable("twilioToken")
+    let fromPhone = Environment.GetEnvironmentVariable("twilioFrom") |> PhoneNumber
+    let toPhone = Environment.GetEnvironmentVariable("twilioTo") |> PhoneNumber
+    let getMostRecentMessage() =
         TwilioClient.Init(sid, token)
         MessageResource.Read(
             ``to``  = toPhone,
