@@ -24,7 +24,7 @@ module Function =
     let token = Environment.GetEnvironmentVariable("TWILIO_TOKEN")
     let fromPhone = Environment.GetEnvironmentVariable("TWILIO_FROM") |> PhoneNumber
     let toPhone = Environment.GetEnvironmentVariable("TWILIO_TO") |> PhoneNumber
-    let mostRecentMessage =
+    let getMostRecentMessage () =
         TwilioClient.Init(sid, token)
         MessageResource.Read(
             ``to``  = toPhone,
@@ -51,7 +51,7 @@ module Function =
             Body    = formattedMessage)
         
     let filterOngoingAndSend venue f =
-        if mostRecentMessage.DateSent.Value > DateTime.Now.Subtract(TimeSpan.FromHours(1.0)) then
+        if getMostRecentMessage().DateSent.Value > DateTime.Now.Subtract(TimeSpan.FromHours(1.0)) then
             ()
         else                
             tryFindOngoingGameAtVenue venue
@@ -61,7 +61,7 @@ module Function =
             |> ignore
         
     [<FunctionName("BoomTime")>]
-    let boomTime([<TimerTrigger("0 */10 * * * 5,6")>] timer: TimerInfo) =
+    let boomTime([<TimerTrigger("0 */10 0-4 * * 6,7")>] _timer: TimerInfo) =
         filterOngoingAndSend bullsStadium (fun g -> g.LiveData.Linescore.CurrentInning >= 8)
 
     [<FunctionName("Manual")>]    
