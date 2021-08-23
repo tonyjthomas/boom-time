@@ -61,7 +61,7 @@ module Function =
             |> ignore
         
     [<FunctionName("BoomTime")>]
-    let boomTime([<TimerTrigger("0 */10 0-4 * * 6,7")>] _timer: TimerInfo) =
+    let boomTime([<TimerTrigger("0 */10 0-4 * * 0,6")>] _timer: TimerInfo) =
         filterOngoingAndSend bullsStadium (fun g -> g.LiveData.Linescore.CurrentInning >= 8)
 
     [<FunctionName("Manual")>]    
