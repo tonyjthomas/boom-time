@@ -55,7 +55,7 @@ module Function =
             Body    = formattedMessage)
         
     let filterOngoingAndSend venue f =
-        if getMostRecentMessage().DateSent.Value > DateTime.Now.Subtract(TimeSpan.FromHours(1.0)) then
+        if getMostRecentMessage().DateSent.Value > DateTime.Now.Subtract(TimeSpan.FromHours(2.0)) then
             ()
         else                
             tryFindOngoingGameAtVenue venue
