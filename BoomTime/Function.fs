@@ -44,7 +44,11 @@ module Function =
         
     let createSms (game: Game.Root) =
         let formattedMessage =
-            sprintf "\n🎆BOOMTIME🎇\n%s vs %s\n%s inning 🐶" game.GameData.Teams.Home.Name game.GameData.Teams.Away.Name game.LiveData.Linescore.CurrentInningOrdinal
+            sprintf "\n🎆BOOMTIME🎇\n%s vs %s\n%s inning\nInnings: %d"
+                game.GameData.Teams.Home.Name
+                game.GameData.Teams.Away.Name
+                game.LiveData.Linescore.CurrentInningOrdinal
+                game.LiveData.Linescore.ScheduledInnings
         CreateMessageOptions(
             ``to``  = toPhone,
             From    = fromPhone,
