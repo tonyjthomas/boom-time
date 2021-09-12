@@ -62,7 +62,7 @@ module Function =
         
     [<FunctionName("BoomTime")>]
     let boomTime([<TimerTrigger("0 */10 0-4 * * 0,6")>] _timer: TimerInfo) =
-        filterOngoingAndSend bullsStadium (fun g -> g.LiveData.Linescore.CurrentInning >= 8)
+        filterOngoingAndSend bullsStadium (fun g -> g.LiveData.Linescore.CurrentInning >= g.LiveData.Linescore.ScheduledInnings - 1)
 
     [<FunctionName("Manual")>]    
     let testBinding ([<HttpTrigger(AuthorizationLevel.Function, "get")>]req: HttpRequest) =
